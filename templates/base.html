@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>LearningPage</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/project.css">
+  
+</head>
+
+<body>
+    <ul>
+        {% for message in get_flashed_messages() %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <div class="navbar navbar-fixed-top">
+    <a href="/login_form"><button type='button' id='login'>Login</button></a>
+    <a href="/logout"><button type='button' id='logout'>Logout</button></a>
+    <a href="/"><button type='button' id='homepage'>Home page</button></a>
+    </div>
+  {% block content %} put your content here {% endblock %}
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
+</html>

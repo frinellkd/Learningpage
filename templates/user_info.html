@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<container>
+    <h2>Hello</h2>
+    <ul>
+        <li>User: {{ user.user_id }}</li>
+        <li>Password: {{user.password }}
+        <li>Age: {{ user.age }}</li>
+    </ul>
+        
+        <h4>Topics Visited:</h4> 
+        <table class="table table-striped">
+            <tr>
+                <th>Visit Date</th>
+                <th>Topics Visited</th>
+                <th>Quiz Score</th>
+            </tr>
+        {% for topics in topics_visited %}
+            <tr>
+            <td>{{ topics[2] }}</td>
+            <td>{{ topics[1] }}</td>
+            <td>{{ topics[3] }}</td>  
+            </tr>
+        {% endfor %}
+        
+</container>
+{% endblock %}

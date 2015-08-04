@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Login</h2>
+    <h3 id="invalid user name/password"></h3>
+    <form action='/login_submit'>
+      <label>User Name: </label>
+      <input type='text' name='user_name' id='user_name'>
+      <br>
+      <label>Password: </label>
+      <input type='text' name='password' id='password'>
+      <br>
+      <label>Age: </label>
+      <input type='text' name='age' id='age'>
+      <input type='submit'>
+    </form>
+
+{% endblock %}
