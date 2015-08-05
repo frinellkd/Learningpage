@@ -1,7 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>View Page</h2>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/wnNrED6yWSw?rel=0" frameborder="0" allowfullscreen><p>Amelia Earhart Video</p></iframe>
+<h4>View Page</h4>
+
+<div class="video_wrapper" id='vph'>
+        
+        <button id='button'><img src='http://img.youtube.com/vi/{{youtube_key}}/hqdefault.jpg'/></button>
+
+
+    
+</div >
+    
+
+
+
+<script>
+var embedVid = '<iframe width="560" height="315" src="https://www.youtube.com/embed/{{youtube_key}}?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>'
+
+$('#button').on("click", function(evt) {
+        evt.preventDefault();
+        $("#vph").html(embedVid);
+});
+
+</script>
+
+
+    
 
 {% endblock %}

@@ -109,7 +109,7 @@ class Topic_video(db.Model):
     topic_video_id = db.Column(Integer, autoincrement=True, primary_key=True)
     video_key = db.Column(Integer, nullable=False)
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
-    topic_thumbnail = db.Column(String(50), nullable=True)
+    
         
     # Define relationship with Topic
     topic = db.relationship("Topic",

@@ -90,8 +90,9 @@ def log_out():
 @app.route('/view')
 def view_topic_selected():
 
+    youtube_key='KPrBgNXpV7w'
 
-    return render_template("view.html")
+    return render_template("view.html", youtube_key=youtube_key)
 
 @app.route('/users/<int:id>')
 def userinfo(id):
