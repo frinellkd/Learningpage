@@ -1,0 +1,64 @@
+.infobox {
+    border: 1px solid #aaa;
+    border-spacing: 3px;
+    background-color: #f9f9f9;
+    color: black;
+    margin: 0.5em 0 0.5em 1em;
+    padding: 0.2em;
+    float: right;
+    clear: right;
+    font-size: 88%;
+    line-height: 1.5em;
+}
+
+@media screen
+.mw-body-content {
+    position: relative;
+    line-height: 1.6;
+    font-size: 0.875em;
+    z-index: 0;
+}
+
+@media screen
+.mw-body {
+    margin-left: 10em;
+    padding: 1em;
+    border: 1px solid #a7d7f9;
+    border-right-width: 0;
+    margin-top: -1px;
+    background-color: #fff;
+    color: #252525;
+    direction: ltr;
+}
+
+div {
+    display: block;
+}
+
+div.hatnote {
+    padding-left: 1.6em;
+    margin-bottom: 0.5em;
+}
+
+@media screen
+.mw-content-ltr {
+    direction: ltr;
+}
+
+@media screen
+.mw-body .firstHeading {
+    overflow: visible;
+}
+@media screen
+.mw-body h1 {
+    font-size: 1.8em;
+}
+@media screen
+.mw-body h1, .mw-body h2 {
+    font-family: "Linux Libertine",Georgia,Times,serif;
+    line-height: 1.3;
+    margin-bottom: 0.25em;
+    padding: 0;
+}
+
+

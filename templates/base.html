@@ -8,16 +8,17 @@
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/project.css">
-  
+    <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.uls.nojs%7Cext.visualEditor.viewPageTarget.noscript%7Cext.wikihiero%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector&amp;*">
 </head>
 
 <body>
+   <div class='container-fluid'>
     <ul>
         {% for message in get_flashed_messages() %}
             <li>{{ message }}</li>
         {% endfor %}
     </ul>
-    <div class="navbar navbar-fixed-top">
+    <div class="row">
     <a href="/login_form"><button type='button' id='login'>Login</button></a>
     <a href="/logout"><button type='button' id='logout'>Logout</button></a>
     <a href="/"><button type='button' id='homepage'>Home page</button></a>
@@ -27,6 +28,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
   {% block content %} put your content here {% endblock %}
-  
+  </div>
 </body>
 </html>

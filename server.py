@@ -8,11 +8,12 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Quiz_completed, connect_to_db, db
+from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Quiz_completed, connect_to_db, db, Topic_wiki
 
 from sqlalchemy import update
 
-import sqlite3
+import sqlite3, json
+
 
 db_connection = sqlite3.connect("learningpage.db", check_same_thread=False)
 db_cursor = db_connection.cursor()
@@ -48,6 +49,7 @@ def login():
 
 @app.route('/login_submit')
 def login_submit():
+    """checks whether person has a current logi and if so, logs them in.  If not it creates an account for them"""
     user_name = request.args.get("user_name")
     password = request.args.get("password")
 
@@ -87,12 +89,22 @@ def log_out():
     flash('You are logged out.')
     return redirect('/')       
 
-@app.route('/view')
-def view_topic_selected():
+@app.route('/view/<int:id>')
+def view_topic_selected(id):
 
-    youtube_key='KPrBgNXpV7w'
+    topic_selected = db.session.query(Topic.topic_title, Topic_wiki.wiki_json,
+                                      Topic_video.Youtube_video_key).join(Topic_wiki).join(Topic_video).filter(Topic.topic_id == id).one()
 
-    return render_template("view.html", youtube_key=youtube_key)
+    
+
+    data = open(topic_selected[1]).read()
+    wiki_data = json.loads(data)
+    wiki_data_title = wiki_data['parse']['title']
+    wiki_data_parsed = wiki_data['parse']['text']['*']
+    
+    youtube_key= topic_selected[2]
+
+    return render_template("view.html", youtube_key=youtube_key, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title)
 
 @app.route('/users/<int:id>')
 def userinfo(id):

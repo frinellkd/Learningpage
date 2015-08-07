@@ -24,13 +24,13 @@ class User(db.Model):
     user_id = db.Column(Integer, autoincrement=True, primary_key=True)
     user_name = db.Column(String(50), nullable=False)
     password = db.Column(String(50), nullable=False)
-    age = db.Column(Integer, nullable=True)
+    
     
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User user_id=%s email=%s>" % (self.user_id, self.email)
+        return "<User user_id=%s email=%s>" % (self.user_id, self.user_name)
 
     
 
@@ -39,7 +39,7 @@ class Visit(db.Model):
     __tablename__ = "visits"
 
     visit_id = db.Column(Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(String(200), db.ForeignKey('users.user_id'), nullable=False)
+    user_id = db.Column(String(200), db.ForeignKey('users.user_id'))
     visit_date = db.Column(DateTime, nullable=False)
    
     # define relationship with user table
@@ -93,8 +93,9 @@ class Topic(db.Model):
 
     topic_id = db.Column(Integer, autoincrement=True, primary_key=True)
     topic_title = db.Column(String(100), nullable=False)
-    wiki_url = db.Column(String(200), nullable=False)
-    wiki_data = db.Column(String(1000), nullable=False)
+    topic_start_date = db.Column(DateTime)
+    topic_end_date = db.Column(DateTime)
+    
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""
@@ -102,13 +103,30 @@ class Topic(db.Model):
     #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
     #         self.rating_id, self.movie_id, self.user_id, self.score)
 
+class Topic_wiki(db.Model):
+
+    __tablename__ = "topic_wiki"
+
+    topic_wiki_id = db.Column(Integer, autoincrement=True, primary_key=True)
+    #once this is converted to a postgresSQL database this will contain the actual JSON data.  
+    #Until then it will contain the location of the data
+    wiki_json = db.Column(String(50000))
+    topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
+    
+        
+    # Define relationship with Topic
+    topic = db.relationship("Topic",
+                           backref=db.backref("topics_visited"))
+
+
 class Topic_video(db.Model):
 
     __tablename__ = "topic_videos"
 
     topic_video_id = db.Column(Integer, autoincrement=True, primary_key=True)
-    video_key = db.Column(Integer, nullable=False)
+    youtube_video_key = db.Column(Integer, nullable=False)
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
+    video_description = db.Column(String(5000), nullable=True)    
     
         
     # Define relationship with Topic
@@ -196,13 +214,9 @@ def connect_to_db(app):
 
     # Configure to use our SQLite database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///learningpage.db'
-    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    app.config['SQLALCHEMY_ECHO'] = False
     db.app = app
     db.init_app(app)
-    db.create_all()
+    
 
 if __name__ == "__main__":
     # If this module is run interactively, it will be left 

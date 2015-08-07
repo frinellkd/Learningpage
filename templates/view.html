@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h4>View Page</h4>
+<h1>View Page</h1>
 
 <div class="video_wrapper" id='vph'>
-        
-        <button id='button'><img src='http://img.youtube.com/vi/{{youtube_key}}/hqdefault.jpg'/></button>
+        <!--Creates buttons with video thumbnails on them-->
+        <img id='button' src='http://img.youtube.com/vi/{{youtube_key}}/hqdefault.jpg'/>
 
-
-    
 </div >
-    
-
-
+<container>
+    <h1 id='wiki_title'>{{wiki_title|safe}}</h1>
+    <div id='wiki'>{{wiki_data|safe}}</div>
+</container>    
 
 <script>
 var embedVid = '<iframe width="560" height="315" src="https://www.youtube.com/embed/{{youtube_key}}?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>'
@@ -22,8 +21,15 @@ $('#button').on("click", function(evt) {
         $("#vph").html(embedVid);
 });
 
+
+
 </script>
 
+<script>
+
+
+
+</script>
 
     
 
