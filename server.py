@@ -92,10 +92,11 @@ def log_out():
 @app.route('/view/<int:id>')
 def view_topic_selected(id):
 
+    """ Takes the topic id from the URL and uses it to locate correct information to display"""
     topic_selected = db.session.query(Topic.topic_title, Topic_wiki.wiki_json,
                                       Topic_video.Youtube_video_key).join(Topic_wiki).join(Topic_video).filter(Topic.topic_id == id).one()
 
-    
+
 
     data = open(topic_selected[1]).read()
     wiki_data = json.loads(data)
