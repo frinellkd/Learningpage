@@ -1,14 +1,14 @@
 """Utility file to seed database from data in wiki_search_urls.txt and topic_youtube.txt"""
 
 # makes data tables and ancilary programs avaialable.
-from model import Topic_videos, Topic_wiki, Topic, connect_to_db, db
+from model import Topic_video, Topic_wiki, Topic, connect_to_db, db
 from server import app
 
 from datetime import datetime
 
-def load_Topics():
+def load_topics():
     """Load topics and topic_wiki info from wiki_search_urls into database."""
-    User_file = open('seed_data/wiki_search_urls')
+    User_file = open('seed_data/wiki_search_urls.txt')
     
     for line in User_file:
         # prepare line for reading data
@@ -30,7 +30,7 @@ def load_Topics():
 
 def load_topic_video():
     """Load Topic_videos info from topic_youtube into database."""
-    Movie_file = open('seed_data/topic_youtube')
+    Movie_file = open('seed_data/topic_youtube.txt')
     
     for line in Movie_file:
         line.strip()
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     connect_to_db(app)
     db.create_all()
 
-
     load_topics()
-    load_topic_wiki()
-    load_topic_videos()
+    load_topic_video()
+    
+    

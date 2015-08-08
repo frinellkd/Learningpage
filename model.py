@@ -116,7 +116,7 @@ class Topic_wiki(db.Model):
         
     # Define relationship with Topic
     topic = db.relationship("Topic",
-                           backref=db.backref("topics_visited"))
+                           backref=db.backref("topic_wiki"))
 
 
 class Topic_video(db.Model):
@@ -126,12 +126,13 @@ class Topic_video(db.Model):
     topic_video_id = db.Column(Integer, autoincrement=True, primary_key=True)
     youtube_video_key = db.Column(Integer, nullable=False)
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
-    video_description = db.Column(String(5000), nullable=True)    
+    video_description = db.Column(String(5000), nullable=True)
+    video_title = db.Column(String(500))    
     
         
     # Define relationship with Topic
     topic = db.relationship("Topic",
-                           backref=db.backref("topics_visited"))
+                           backref=db.backref("topic_video"))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

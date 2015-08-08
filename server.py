@@ -93,19 +93,22 @@ def log_out():
 def view_topic_selected(id):
 
     """ Takes the topic id from the URL and uses it to locate correct information to display"""
-    topic_selected = db.session.query(Topic.topic_title, Topic_wiki.wiki_json,
-                                      Topic_video.Youtube_video_key).join(Topic_wiki).join(Topic_video).filter(Topic.topic_id == id).one()
+    # gets all the the youtube keys from the database
+    youtube_keys = db.session.query(Topic_video.youtube_video_key).filter(Topic_video.topic_id == id).all()
+    # gets the path for the wiki page from the database
+    topic_selected_wiki = db.session.query(Topic_wiki.wiki_json).filter(Topic_wiki.topic_id == id).one()
+    # prepares the path by stripping off a retrun (will do this before populating the database in the future)
+    topic_wiki = str(topic_selected_wiki.wiki_json).strip()
 
 
-
-    data = open(topic_selected[1]).read()
+    data = open(topic_wiki).read()
     wiki_data = json.loads(data)
     wiki_data_title = wiki_data['parse']['title']
     wiki_data_parsed = wiki_data['parse']['text']['*']
     
-    youtube_key= topic_selected[2]
+    
 
-    return render_template("view.html", youtube_key=youtube_key, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title)
+    return render_template("view.html", youtube_keys=youtube_keys, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title)
 
 @app.route('/users/<int:id>')
 def userinfo(id):
@@ -119,68 +122,16 @@ def userinfo(id):
                                     ).filter(Topic_visited.user_id == id).all()
     
     return render_template("user_info.html", user=user_info, topics_visited=topics_visited)
-
-# @app.route('/movies')
-# def movies_list():
-#     """Show list of movies."""
-
-#     movies = Movie.query.order_by(Movie.movie_title).all()
-#     return render_template("movies_list.html", movies=movies)
-
-# @app.route('/movies/<int:id>')
-# def movieinfo(id):
-
-#     movie_info = Movie.query.filter_by(movie_id = id).one()
-    
-#     rating_list = db.session.query(Rating.score,
-#                                    Rating.user_id).filter(Rating.movie_id == id).order_by(Rating.score).all()
-#     print rating_list
-
-
-#     return render_template('movie_info.html', movie=movie_info, movies_rated=rating_list)
-
-# @app.route('/test/<int:movie_id>', methods=["Post"])
-# def userrating(movie_id):
-#     userrating = int(request.form['user_rating'])
-    
-#     email = session.get('user_id')
-#     try:
-#         user_id = db.session.query(User.user_id).filter_by(email=email).one()[0]
-    
-#     except:
-#         flash("you must be logged in to rate a movie")
-#         return redirect('/movies/' + str(movie_id))
-
-
-#     current_ratings = db.session.query(Rating).filter_by(user_id=user_id).filter_by(movie_id=movie_id).all()
-    
-    
-#     if len(current_ratings) >= 1:
-
-#         current_ratings[0].score=userrating
-#         db.session.add(current_ratings[0])
-               
-
-#     else:
-#         user_rating = Rating(movie_id=movie_id,
-#                             score= userrating, 
-#                             user_id=user_id)
-
-#         db.session.add(user_rating) 
-#     db.session.commit()
-
-#     flash('Thanks for rating this movie')
-#     return redirect('/movies/' + str(movie_id))
     
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = True
+    app.debug = False
 
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    #DebugToolbarExtension(app)
 
     app.run()

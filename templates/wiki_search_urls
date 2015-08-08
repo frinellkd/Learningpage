@@ -1,5 +1,0 @@
-Amelia Earhart|1|/w/api.php?action=parse&format=json&page=Amelia%20Earhart&prop=text&section=0&disablepp=&disableeditsection=&disabletoc=|templates/amelia_earhart.html
-Titanic|2|/w/api.php?action=parse&format=json&page=RMS%20Titanic&prop=text&section=0&disablepp=&disableeditsection=&disabletoc=|templates/titanic.html
-Martin Luther King Jr|3|/w/api.php?action=parse&format=json&page=Martin%20Luther%20King%2C%20Jr.&prop=text&section=0&disablepp=&disableeditsection=&disabletoc=|templates/mlk.html
-JFK Assassination|4|/w/api.php?action=parse&format=json&page=Assassination%20of%20John%20F.%20Kennedy&prop=text&section=0&disablepp=&disableeditsection=&disabletoc=|templates/jfk_assassination.html
-Hindenburg|5|/w/api.php?action=parse&format=json&page=Hindenburg%20disaster&prop=text&section=0&disablepp=&disableeditsection=&disabletoc=|templates/hindenburg.html
