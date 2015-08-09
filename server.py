@@ -77,6 +77,13 @@ def login_submit():
                
 
     if session_id:
+        # creates an instance of visit when someone logs in.
+        visit = Visit(user_id=session_id)
+        db.session.add(visit)
+        db.session.commit()
+
+
+        # creates an instance of the session when someone logs in.
         session['user_id'] = session_id
         flash('You are logged in')
 
@@ -106,6 +113,14 @@ def view_topic_selected(id):
     wiki_data_title = wiki_data['parse']['title']
     wiki_data_parsed = wiki_data['parse']['text']['*']
     
+    # logs a instance of a topic being visited if the person is logged on.
+    if 'user_id' in session:
+        user_id=session['user_id']
+        v_info = db.session.query(Visit.visit_id).filter_by(user_id=user_id).all()
+        current_visit = v_info[-1][0]
+        t_visited = Topic_visited(visit_id=current_visit, topic_id=id)
+        db.session.add(t_visited)
+        db.session.commit()
     
 
     return render_template("view.html", youtube_keys=youtube_keys, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title)
@@ -115,23 +130,38 @@ def userinfo(id):
 
     user_info = User.query.filter_by(user_id = id).one()
     
-    topics_visited = db.session.query(Topic_visited.topics_visited_id,
+    topics_visited = db.session.query(Visit.visit_id,
+                                    Topic_visited.visit_id,  
                                     Topic.topic_title,
-                                    Visit.visit_date,
-                                    Quiz_completed.grade_earned).join(Topic).join(Visit).join(Quiz_completed
-                                    ).filter(Topic_visited.user_id == id).all()
+                                    Visit.visit_date).join(Topic_visited).join(Topic).filter(Visit.user_id == id).all()
+
+    print "topics_visited:", topics_visited                                
     
     return render_template("user_info.html", user=user_info, topics_visited=topics_visited)
-    
+
+@app.route('/user_redirect')
+def userinfo_helper():
+    try:
+
+        session_id = session['user_id']
+
+    except:
+        
+        flash("You are not logged on so there is no information page for you")
+        return redirect('/')    
+
+    return redirect('/users/' + str(session_id))
+
+
 
 if __name__ == "__main__":
-    # We have to set debug=True here, since it has to be True at the point
-    # that we invoke the DebugToolbarExtension
-    app.debug = False
+    # Debug toolbar has been turned on while working on this app
+    # Will be turned off when finished
+    app.debug = True
 
     connect_to_db(app)
 
     # Use the DebugToolbar
-    #DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run()

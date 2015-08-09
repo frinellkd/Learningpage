@@ -1,25 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>View Page</h1>
+<h1>{{wiki_title|safe}}</h1>
 
 {% for key in youtube_keys %}
 
-<div class="video_wrapper" id='vph'>
-        <!--Creates buttons with video thumbnails on them-->
-        <img id='button_{{key.youtube_video_key}}' src='http://img.youtube.com/vi/{{key.youtube_video_key}}/hqdefault.jpg'/>
-</div >
+<span class="video_wrapper" id='thumbnails'>
+        <!--Creates images that can be clicked to start corresponding video-->
+        <img id='thumbnail_{{key.youtube_video_key}}' src='http://img.youtube.com/vi/{{key.youtube_video_key}}/hqdefault.jpg'/ >
+</span >
+
+<div id='vph'></div>
 
 
 <script>
+    // embeds a video upon clicking the image related to the video
 var embedVid_{{key.youtube_video_key}} = '<iframe width="560" height="315" src="https://www.youtube.com/embed/{{key.youtube_video_key}}?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>'
 
-$('#button_{{key.youtube_video_key}}').on("click", function(evt) {
+$('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
         evt.preventDefault();
         $("#vph").html(embedVid_{{key.youtube_video_key}});
 });
 </script>
 {% endfor %}
+
 
 <container>
     <h1 id='wiki_title'>{{wiki_title|safe}}</h1>

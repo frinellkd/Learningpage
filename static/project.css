@@ -61,4 +61,10 @@ div.hatnote {
     padding: 0;
 }
 
+.video_wrapper{
+    display: inline;
+}
 
+.video_wrapper img{
+    width: 300px;
+}

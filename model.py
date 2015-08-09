@@ -9,6 +9,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String, ForeignKey, or_, create_engine, DateTime
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import func
 
 
 db = SQLAlchemy()
@@ -40,7 +41,7 @@ class Visit(db.Model):
 
     visit_id = db.Column(Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(String(200), db.ForeignKey('users.user_id'))
-    visit_date = db.Column(DateTime, nullable=False)
+    visit_date = db.Column(DateTime(timezone=True), default=func.now())
    
     # define relationship with user table
 
@@ -61,14 +62,10 @@ class Topic_visited(db.Model):
 
     topics_visited_id = db.Column(Integer, autoincrement=True, primary_key=True)
     visit_id = db.Column(Integer, ForeignKey('visits.visit_id'), nullable=False)
-    user_id = db.Column(Integer, ForeignKey('users.user_id'), nullable=False)
-    quiz_completed_id = db.Column(Integer, ForeignKey('quizes_completed.quiz_completed_id'), nullable=False)
+    quiz_completed_id = db.Column(Integer, ForeignKey('quizes_completed.quiz_completed_id'))
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
 
-    # Define relationship to User
-    user = db.relationship("User",
-                           backref=db.backref("topic_visited"))
-    
+     
     # Define relationship with Quiz_completed
     quiz = db.relationship("Quiz_completed",
                            backref=db.backref("topic_visited"))

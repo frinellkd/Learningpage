@@ -13,17 +13,18 @@
 
 <body>
    <div class='container-fluid'>
+   
+    <div class="row">
+    <a href="/login_form"><button type='button' id='login'>Login</button></a>
+    <a href="/logout"><button type='button' id='logout'>Logout</button></a>
+    <a href="/"><button type='button' id='homepage'>Home page</button></a>
+    <a href="/user_redirect"><button type='button' id='user_info'>User Info</button></a>
+    </div>
     <ul>
         {% for message in get_flashed_messages() %}
             <li>{{ message }}</li>
         {% endfor %}
     </ul>
-    <div class="row">
-    <a href="/login_form"><button type='button' id='login'>Login</button></a>
-    <a href="/logout"><button type='button' id='logout'>Logout</button></a>
-    <a href="/"><button type='button' id='homepage'>Home page</button></a>
-    </div>
-
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
