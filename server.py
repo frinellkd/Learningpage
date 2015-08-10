@@ -49,7 +49,7 @@ def login():
 
 @app.route('/login_submit')
 def login_submit():
-    """checks whether person has a current logi and if so, logs them in.  If not it creates an account for them"""
+    """checks whether person has a current logi and if so, logs them in.  If not it swnds them to a page to creates an account """
     user_name = request.args.get("user_name")
     password = request.args.get("password")
 
@@ -63,17 +63,71 @@ def login_submit():
             flash("Incorrect password.  Please try again")
             return redirect('/login_form')
 
-        else:
+        else: 
+            flash('There is no user matching the username you provided.  Please create an account.')
+            return redirect('/new_user_form')
+
+    if session_id:
+        # creates an instance of visit when someone logs in.
+        visit = Visit(user_id=session_id)
+        db.session.add(visit)
+        db.session.commit()
+
+
+        # creates an instance of the session when someone logs in.
+        session['user_id'] = session_id
+        flash('You are logged in')
+
+    return redirect('/users/' + str(session_id))
+
+
+@app.route('/check_user_name', methods=['POST'])
+def check_user_name():
+    """ Checks if a user name is used or not and returns that message via ajax to the page"""
+    user_name = request.form.get("user_name")
+
+    user_name_check = db.session.query(User.user_id).filter_by(user_name=user_name).all()
+
+
+    if len(user_name_check) >=1:
+        return 'Sorry, That username is taken';
+    else:
+        return 'That user name is available'
+
+@app.route('/new_user_form')
+def create_new_user():
+
+    return render_template('new_user_form.html')
+
+@app.route('/new_user_submit')
+def new_user_submit():
+    """creates a new account """
+    
+    first_name = request.args.get("first_name")
+    last_name = request.args.get("last_name")
+    user_name = request.args.get("user_name")
+    password = request.args.get("password")
+
+
+
+    user_existing_check = db.session.query(User.user_id).filter_by(first_name=first_name, last_name=last_name).all()
+    
             
-            #SQL Statement entering user info
-            user = User(user_name=user_name, 
+
+    if len(user_existing_check) >= 1:
+        flash('There is already an account registered under that name')
+        return redirect('/login_form')
+
+    else:    
+        #SQL Statement entering user info
+        user = User(first_name=first_name, last_name=last_name, user_name=user_name, 
                     password= password)
 
-            db.session.add(user) 
-            db.session.commit()
+        db.session.add(user) 
+        db.session.commit()
             
-            user_id = db.session.query(User.user_id).filter_by(user_name=user_name, password=password).one()   
-            session_id = user_id[0]
+        user_id = db.session.query(User.user_id).filter_by(user_name=user_name, password=password).one()   
+        session_id = user_id[0]
                
 
     if session_id:
