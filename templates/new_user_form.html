@@ -25,7 +25,6 @@
       $('#user_name').change(function(){
           //user types username on inputfiled
           var username ={'user_name': $(this).val()};
-          console.log(username);
           //get the string typed by user
           $.post('/check_user_name', username, function(data) { 
                 //make ajax call to check_username.php
