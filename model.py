@@ -7,9 +7,10 @@
 # object, where we do most of our interactions (like committing, etc.)
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, ForeignKey, or_, create_engine, DateTime
+from sqlalchemy import Integer, String, ForeignKey, or_, create_engine, DateTime, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
+
 
 
 db = SQLAlchemy()
@@ -64,14 +65,10 @@ class Topic_visited(db.Model):
 
     topics_visited_id = db.Column(Integer, autoincrement=True, primary_key=True)
     visit_id = db.Column(Integer, ForeignKey('visits.visit_id'), nullable=False)
-    quiz_completed_id = db.Column(Integer, ForeignKey('quizes_completed.quiz_completed_id'))
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
 
      
-    # Define relationship with Quiz_completed
-    quiz = db.relationship("Quiz_completed",
-                           backref=db.backref("topic_visited"))
-    
+   
     # Define relationship with Topic
     topic = db.relationship("Topic",
                            backref=db.backref("topic_visited"))
@@ -139,12 +136,19 @@ class Topic_video(db.Model):
     #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
     #         self.rating_id, self.movie_id, self.user_id, self.score)
 
-class Quiz_completed(db.Model):
+class Topic_data(db.Model):
 
-    __tablename__ = "quizes_completed"
+    __tablename__ = "topic_data"
 
-    quiz_completed_id = db.Column(Integer, autoincrement=True, primary_key=True)
-    grade_earned = db.Column(Integer, nullable=False)
+    topic_data_id = db.Column(Integer, autoincrement=True, primary_key=True)
+    topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
+    lat = db.Column(Integer)
+    lng = db.Column(Integer)
+    description = db.Column(String(300))
+    topic_date = db.Column(Date)
+
+    topic = db.relationship("Topic",
+                           backref=db.backref("topic_date"))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

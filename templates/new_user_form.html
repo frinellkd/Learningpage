@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
-{% block content %}
+{% block body %}
 
     <h2>New User Information</h2>
     <h3 id="invalid user name/password"></h3>
     <form action='/new_user_submit'>
-      <label>First Name: </label>
+      <label for='first_name'>First Name: </label>
       <input type='text' name='first_name' id='first_name'>
       <br>
-      <label>Last Name: </label>
+      <label for='last_name'>Last Name: </label>
       <input type='text' name='last_name' id='last_name'>
       <br>
-      <label>Enter Username: </label>
+      <label for='user_name'>Enter Username: </label>
       <input type='text' name='user_name' id='user_name'>
       <!--creates a span to dump the ajax result-->
       <span id='user_result'></span>
       <br>
-      <label>Password: </label>
+      <label for='password'>Password: </label>
       <input type='text' name='password' id='password'>
       <br>
       <input type='submit'>

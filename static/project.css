@@ -68,3 +68,8 @@ div.hatnote {
 .video_wrapper img{
     width: 300px;
 }
+
+.map-canvas {
+    height:500px;
+    background_color: #CCC;
+}

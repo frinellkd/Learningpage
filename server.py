@@ -8,7 +8,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Quiz_completed, connect_to_db, db, Topic_wiki
+from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Topic_data, connect_to_db, db, Topic_wiki
 
 from sqlalchemy import update
 
@@ -31,15 +31,16 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
+    
+    topic_data = db.session.query(Topic_data.topic_id, Topic.topic_title, 
+                Topic_data.lat, Topic_data.lng, Topic_data.description,
+                Topic_data.topic_date).join(Topic).order_by(Topic.topic_id).all()
 
-    return render_template("homepage.html")
+    print topic_data
 
-# @app.route('/users')
-# def user_list():
-#     """Show list of users."""
+    return render_template("homepage.html", topic_data=topic_data)
 
-#     users = User.query.all()
-#     return render_template("user_list.html", users=users)
+
 
 @app.route('/login_form')
 def login():
@@ -205,6 +206,8 @@ def userinfo_helper():
         return redirect('/')    
 
     return redirect('/users/' + str(session_id))
+
+
 
 
 
