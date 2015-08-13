@@ -1,7 +1,7 @@
 """Utility file to seed database from data in wiki_search_urls.txt and topic_youtube.txt"""
 
 # makes data tables and ancilary programs avaialable.
-from model import Topic_video, Topic_wiki, Topic, Topic_data, connect_to_db, db
+from model import Topic_video, Topic_wiki, Topic, Event_data, connect_to_db, db
 from server import app
 
 from datetime import datetime
@@ -46,11 +46,11 @@ def load_topic_video():
         db.session.add(video) 
     db.session.commit()
 
-def load_topic_data():
+def load_event_data():
     """Load data about the topics from the data file"""
     Data_file = open('seed_data/topic_data.txt')
 
-    print "Data_file:", Data_file
+    
 
     for line in Data_file:
         line = line.strip()
@@ -59,13 +59,13 @@ def load_topic_data():
         lat=row[1]
         lng=row[2]
         info=row[3]
-        topic_date=row[4]
-        date = datetime.strptime(topic_date, '%Y,%m,%d')
+        event_date=row[4]
+        date = datetime.strptime(event_date, '%Y,%m,%d')
+        event_title=row[5]
 
-        topic_data=Topic_data(topic_id=topic_id, lat=lat, lng=lng, description=info, topic_date=date)
+        topic_data=Event_data(topic_id=topic_id, lat=lat, lng=lng, description=info, event_date=date, event_title=event_title)
 
-        print "topic_data:", topic_data
-
+        
         db.session.add(topic_data)
     db.session.commit()   
 
@@ -75,6 +75,6 @@ if __name__ == "__main__":
 
     load_topics()
     load_topic_video()
-    load_topic_data()
+    load_event_data()
     
     

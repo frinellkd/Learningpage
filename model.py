@@ -89,9 +89,7 @@ class Topic(db.Model):
 
     topic_id = db.Column(Integer, autoincrement=True, primary_key=True)
     topic_title = db.Column(String(100), nullable=False)
-    topic_start_date = db.Column(DateTime)
-    topic_end_date = db.Column(DateTime)
-    
+        
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""
@@ -136,19 +134,21 @@ class Topic_video(db.Model):
     #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
     #         self.rating_id, self.movie_id, self.user_id, self.score)
 
-class Topic_data(db.Model):
+class Event_data(db.Model):
 
-    __tablename__ = "topic_data"
+    __tablename__ = "event_data"
 
-    topic_data_id = db.Column(Integer, autoincrement=True, primary_key=True)
+    event_data_id = db.Column(Integer, autoincrement=True, primary_key=True)
     topic_id = db.Column(Integer, ForeignKey('topics.topic_id'), nullable=False)
     lat = db.Column(Integer)
     lng = db.Column(Integer)
-    description = db.Column(String(300))
-    topic_date = db.Column(Date)
+    description = db.Column(String(500))
+    event_date = db.Column(Date)
+    event_title = db.Column(String(100))
+
 
     topic = db.relationship("Topic",
-                           backref=db.backref("topic_date"))
+                           backref=db.backref("event_date"))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

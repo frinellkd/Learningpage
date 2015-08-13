@@ -8,7 +8,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Topic_data, connect_to_db, db, Topic_wiki
+from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Event_data, connect_to_db, db, Topic_wiki
 
 from sqlalchemy import update
 
@@ -32,21 +32,20 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     
-    topic_data = db.session.query(Topic_data.topic_id, Topic.topic_title, 
-                Topic_data.lat, Topic_data.lng, Topic_data.description,
-                Topic_data.topic_date).join(Topic).order_by(Topic.topic_id).all()
+    topic_data = db.session.query(Event_data.topic_id, Topic.topic_title, 
+                Event_data.lat, Event_data.lng, Event_data.description,
+                Event_data.event_date).join(Topic).order_by(Topic.topic_id).all()
 
-    print topic_data
+    
 
     return render_template("homepage.html", topic_data=topic_data)
 
 
+# @app.route('/login_form')
+# def login():
+#     """shows login form"""
 
-@app.route('/login_form')
-def login():
-    """shows login form"""
-
-    return render_template("login_form.html")
+#     return render_template("login_form.html")
 
 @app.route('/login_submit')
 def login_submit():
@@ -66,7 +65,7 @@ def login_submit():
 
         else: 
             flash('There is no user matching the username you provided.  Please create an account.')
-            return redirect('/new_user_form')
+            return redirect('/')
 
     if session_id:
         # creates an instance of visit when someone logs in.
@@ -91,9 +90,9 @@ def check_user_name():
 
 
     if len(user_name_check) >=1:
-        return 'Sorry, That username is taken';
+        return '<img src=static/img/redx.png width=7%> Not Available'
     else:
-        return 'That user name is available'
+        return '<img src=static/img/greentick.jpg width=10%> Available'
 
 @app.route('/new_user_form')
 def create_new_user():
