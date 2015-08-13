@@ -145,6 +145,7 @@ class Event_data(db.Model):
     description = db.Column(String(500))
     event_date = db.Column(Date)
     event_title = db.Column(String(100))
+    image= db.Column(String(200))
 
 
     topic = db.relationship("Topic",

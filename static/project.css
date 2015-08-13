@@ -70,7 +70,7 @@ div.hatnote {
 }
 
 .map-canvas {
-    height:500px;
+    height:900px;
     background_color: #CCC;
 }
 
@@ -175,3 +175,25 @@ a.btn_red  {
      margin-bottom: 5px;
 }
  
+.topic_map {
+
+    height: 700px;
+    width: 700px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+    border-right-width: 2px;
+    border-right-color: #ffffff;
+    border-right-style: solid;
+    border-left-width: 2px;
+    border-left-color: #ffffff;
+    border-left-style: solid;
+}
+  
+.pop_up_box_text {
+    font-family: Georgia, 'Times New Roman', Times, serif; 
+    font-size: 16px; 
+    line-height: 22px; 
+    color: #ffffff; 
+    display: inline; 
+}

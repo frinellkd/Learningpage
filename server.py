@@ -34,9 +34,9 @@ def index():
     
     topic_data = db.session.query(Event_data.topic_id, Topic.topic_title, 
                 Event_data.lat, Event_data.lng, Event_data.description,
-                Event_data.event_date).join(Topic).order_by(Topic.topic_id).all()
+                Event_data.event_date, Event_data.image).join(Topic).order_by(Topic.topic_id).all()
 
-    
+    print topic_data
 
     return render_template("homepage.html", topic_data=topic_data)
 
@@ -177,7 +177,7 @@ def view_topic_selected(id):
         db.session.commit()
     
 
-    return render_template("view.html", youtube_keys=youtube_keys, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title)
+    return render_template("view.html", youtube_keys=youtube_keys, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id)
 
 @app.route('/users/<int:id>')
 def userinfo(id):

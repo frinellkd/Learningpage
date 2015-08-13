@@ -62,8 +62,9 @@ def load_event_data():
         event_date=row[4]
         date = datetime.strptime(event_date, '%Y,%m,%d')
         event_title=row[5]
+        image=row[6]
 
-        topic_data=Event_data(topic_id=topic_id, lat=lat, lng=lng, description=info, event_date=date, event_title=event_title)
+        topic_data=Event_data(topic_id=topic_id, lat=lat, lng=lng, description=info, event_date=date, event_title=event_title, image=image)
 
         
         db.session.add(topic_data)

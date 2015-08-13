@@ -1,5 +1,5 @@
-1|-4.6756424|-174.5178437|Location where wreckage was found that was believed to belong to Amelia Earhart.|1937,07,02|Wreckage Found
-2|41.732500|-49.946900|Location where the Titanic sank.|1912,04,15|Sinking 
-3|35.1345232|-90.0574813|Location where Martin Luther King Jr. was assasinated.|1968,04,04|Assasination
-4|32.778203|-96.808497|Daly Plaza, Location where JFK was assasinated.|1963,11,22|Assasination
-5|40.0297287|-74.3382333|Location of the Hindenburg disaster.|1937,05,06|Explosion
+1|-4.6756424|-174.5178437|Location where wreckage was found that was believed to belong to Amelia Earhart.|1937,07,02|Wreckage Found|static/img/AmeliaEarhart.jpg
+2|41.732500|-49.946900|Location where the Titanic sank.|1912,04,15|Sinking|static/img/Titanic.jpg 
+3|35.1345232|-90.0574813|Location where Martin Luther King Jr. was assasinated.|1968,04,04|Assasination|static/img/MLK.jpg
+4|32.778203|-96.808497|Daly Plaza, Location where JFK was assasinated.|1963,11,22|Assasination|static/img/JFK.jpg
+5|40.0297287|-74.3382333|Location of the Hindenburg disaster.|1937,05,06|Explosion|static/img/Hindenburg.jpg

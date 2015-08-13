@@ -1,19 +1,15 @@
 <!doctype html>
 <html>
 <head>
+    
     <meta charset="UTF-8">
     <title>LearningPage</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="static/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/project.css">
     <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.uls.nojs%7Cext.visualEditor.viewPageTarget.noscript%7Cext.wikihiero%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector&amp;*">
-    
-    
-  {% block head %}
-      
-  {% endblock %}
 
 </head>
 
@@ -35,13 +31,14 @@
 <!--Jquery for maps, timeline and other plugins -->    
     <script src="https://code.jquery.com/jquery.js"></script>
 <!--Needed for google map -->    
-    <script src="static/leanModal.js"></script>
+    <script src="/static/leanModal.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 <!--needed for timeline -->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="static/Timeline/timeline.js"></script>
-    <link rel="stylesheet" type="text/css" href="static/Timeline/timeline.css">
-    
+    <script type="text/javascript" src="/static/Timeline/timeline.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/Timeline/timeline.css">
+  
+
   {% block body %} put your content here {% endblock %}
   </div>
 </body>

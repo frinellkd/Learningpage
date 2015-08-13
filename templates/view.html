@@ -1,16 +1,117 @@
 {% extends 'base.html' %}
 {% block body %}
 
+
+
+<script>
+
+//Create the variables that will be used within the map configuration options.
+//The latitude and longitude of the center of the map.
+var topicMapCenter = new google.maps.LatLng(32.4621474,-92.8396034);
+//The degree to which the map is zoomed in. This can range from 0 (least zoomed) to 21 and above (most zoomed).
+var topicMapZoom = 3;
+// The max and min zoom levels that are allowed.
+var topicMapZoomMax = 7;
+var topicMapZoomMin = 1;
+
+//These options configure the setup of the map. 
+var topicMapOptions = { 
+          center: topicMapCenter, 
+          zoom: topicMapZoom,
+          //The type of map. In addition to ROADMAP, the other 'premade' map styles are SATELLITE, TERRAIN and HYBRID. 
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          maxZoom:topicMapZoomMax,
+          minZoom:topicMapZoomMin,
+          //Turn off the map controls as we will be adding our own later.
+          panControl: false,
+          mapTypeControl: false,
+};
+
+//Create the variable for the main map itself.
+var topicMap;
+
+
+
+
+
+//THE MAIN FUNCTION THAT IS CALLED WHEN THE WEB PAGE LOADS--------------------------------------------------------------------------------
+function loadtopicMap() {
+    
+//The empty map variable ('topicmap') was created above. The line below creates the map, assigning it to this variable. The line below also loads the map into the div with the id 'topic_map{{topic_id}}' (see code within the 'body' tags below), and applies the 'topicMapOptions' (above) to configure this map. 
+topicMap = new google.maps.Map(document.getElementById("topic_map{{topic_id}}"), topicMapOptions); 
+
+
+//Calls the function below to load up all the map markers.
+loadMapMarkers();
+
+};
+
+
+
+//Function that loads the map markers.
+function loadMapMarkers (){
+
+//Event IDs
+
+//Setting the position of a map marker.  This will be replaced by the event lat, long and info once that is created
+var markerPositionEvent = new google.maps.LatLng(-4.6756424,-174.5178437);
+
+//Setting the icon to be used with the event map marker.
+var markerIconEvent = {
+      url: '/static/img/AmeliaEarhart.jpg',
+      //The size image file.
+      size: new google.maps.Size(50, 50),
+      //The point on the image to measure the anchor from. 0, 0 is the top left.
+      origin: new google.maps.Point(0, 0),
+      //The x y coordinates of the anchor point on the marker. e.g. If your map marker was a drawing pin then the anchor would be the tip of the pin.
+      anchor: new google.maps.Point(0, 0)
+};
+
+
+
+//Setting the shape to be used with the Glastonbury map marker.
+var markerShapeEvent = {
+      coord: [12,4,216,22,212,74,157,70,184,111,125,67,6,56],
+      type: 'poly'
+};
+
+
+
+//Creating the first event map marker.
+markerEvent = new google.maps.Marker({
+      //uses the position set above.
+      position: markerPositionEvent,
+      //adds the marker to the map.
+      map: topicMap,
+      title: 'Amelia Earhart wreckage',
+      //assigns the icon image set above to the marker.
+      icon: markerIconEvent,
+      //assigns the icon shape set above to the marker.
+      shape: markerShapeEvent,
+      //sets the z-index of the map marker.
+      zIndex:102
+});
+
+};
+
+//When the page loads, the line below calls the function below called 'loadTopicMap' to load up the map.
+google.maps.event.addDomListener(window, 'load', loadtopicMap);
+
+</script>
+
+
+
 <h1>{{wiki_title|safe}}</h1>
 
 {% for key in youtube_keys %}
 
-<span class="video_wrapper" id='thumbnails'>
+<div class="video_wrapper" id='thumbnails'>
         <!--Creates images that can be clicked to start corresponding video-->
         <img id='thumbnail_{{key.youtube_video_key}}' src='http://img.youtube.com/vi/{{key.youtube_video_key}}/hqdefault.jpg'/ >
-</span >
+</div >
 
 <div id='vph'></div>
+
 
 
 <script>
@@ -21,9 +122,11 @@ $('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
         evt.preventDefault();
         $("#vph").html(embedVid_{{key.youtube_video_key}});
 });
+
+
 </script>
 {% endfor %}
-
+<div id="topic_map{{topic_id}}" class="topic_map"></div>
 
 <container>
     <h1 id='wiki_title'>{{wiki_title|safe}}</h1>

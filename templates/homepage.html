@@ -2,7 +2,7 @@
 {% block body %} 
 <body>
 <div class="container">
-
+<container>
     <div id="modal" class="popupContainer" style="display: none;">
         <header class="popupHeader">
             <span class="header_title">Login</span>
@@ -53,7 +53,7 @@
     </section> 
     </div>
 </div>     
-
+</container>
     <script>
 
          $("#modal_trigger").leanModal({top : 200, overlay : 0.6, closeButton: ".modal_close" });
@@ -129,19 +129,32 @@
             content: '<a href="/view/{{data.topic_id}}">{{data.description}}</a>'
             });
         
+        var icon = {
+            url: '{{data.image}}', // url
+            scaledSize: new google.maps.Size(50, 50), // scaled size
+            origin: new google.maps.Point(0,0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+            };
         
             // attach markers to each topic locaiton retruned in JSON
             var marker{{data.topic_id}} = new google.maps.Marker({
                     map: map,
-                    title: '{{ data.topic_title}}', 
+                    title: '{{ data.topic_title}}',
+                    icon: icon,
                     place: { 
                         location: {lat: {{data.lat}}, lng: {{data.lng}}},
                         query: '{{data.description}}'
-                    }    
+                    }
+                        
             });        
             
             marker{{data.topic_id}}.addListener('click', function(){
             infowindow{{data.topic_id}}.open(map, marker{{data.topic_id}});    
+            });
+
+            marker{{data.topic_id}}.addListener('click', function(){
+            infowindow{{data.topic_id}}.open(map, marker{{data.topic_id}});
+                
             });
 
         {% endfor %} 
