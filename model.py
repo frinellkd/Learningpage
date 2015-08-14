@@ -149,7 +149,7 @@ class Event_data(db.Model):
 
 
     topic = db.relationship("Topic",
-                           backref=db.backref("event_date"))
+                           backref=db.backref("event_data"))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

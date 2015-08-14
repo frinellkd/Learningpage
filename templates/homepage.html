@@ -1,106 +1,14 @@
 {% extends 'base.html' %}
 {% block body %} 
 <body>
-<div class="container">
-<container>
-    <div id="modal" class="popupContainer" style="display: none;">
-        <header class="popupHeader">
-            <span class="header_title">Login</span>
-        <span class="modal_close"><i class="fa fa-times"></i></span>
-     </header>
- 
-    <section class="popupBody">
-        
-    <!-- Here Goes all the Login and signup Forms -->
-      <div class='user_login'>
-        <form action='/login_submit'>
-            <label>User Name: </label>
-            <input type='text' name='user_name' id='user_name'>
-            <br>
-            <label>Password: </label>
-            <input type='password' name='password' id='password'>
-            <br>
-            <input type='submit'>
-        </form>
-
-      </div>
-
-      <div class='user_register'>
-        <form action='/new_user_submit'>
-            <h3 id="invalid user name/password"></h3>
-        
-                <label for='first_name'>First Name: </label>
-                <input type='text' name='first_name' id='first_name'>
-                <br>
-                <label for='last_name'>Last Name: </label>
-                <input type='text' name='last_name' id='last_name'>
-                <br>
-                <label for='user_name'>Enter Username: </label>
-                <input type='text' name='user_name' id='user_name_new'>
-                 <!--creates a span to dump the ajax result-->
-                <span id='user_result'></span>
-                <br>
-                <label for='password'>Password: </label>
-                <input type='password' name='password' id='password'>
-                <br>
-                <input type='submit'>
-        </form>        
-      </div>
-      <div class="action_btns">
-            <div class="one_half"><a href="#" id="login_form" class="btn">Login</a></div>
-            <div class="one_half last"><a href="#" id="register_form" class="btn">Sign up</a></div>
-      </div>
-    </section> 
-    </div>
-</div>     
-</container>
-    <script>
-
-         $("#modal_trigger").leanModal({top : 200, overlay : 0.6, closeButton: ".modal_close" });
-
-        $(function () {
-        // Calling Login Form
-            $("#login_form").click(function () {
-                $(".user_login").show();
-                $(".user_register").hide();
-                $(".header_title").text('Login');
-                return false;
-            });
-         
-            // Calling Register Form
-            $("#register_form").click(function () {
-                $(".user_register").show();
-                $(".user_login").hide();
-                $(".header_title").text('Register');
-                return false;
-                });
-        })
-
-        $('#user_name_new').change(function(){
-            //user types username on inputfiled
-            var username ={'user_name': $(this).val()};
-            //get the string typed by user
-            $.post('/check_user_name', username, function(data) { 
-                  //make ajax call to check_username.php
-                  $("#user_result").html(data); //dump the data received from PHP page
-                 });
-            });
-
-       </script>
-    
-    
+   
 
 <h1>Learning Page</h1>
 <!-- html div for timeline: -->
-   <div id='mytimeline'></div>
+   
 
 <h2>Topics</h2>
-    
-    <a href="/view/1"><button type='button' name='Topic1'>Amelia Earhart</button></a>
-    <a href="/view/2"><button type='button' name='Topic2'>Titanic</button></a>
-    <a href="/view/3"><button type='button' name='Topic1'>Martin Luther King Jr.</button></a>
-    <a href="/view/4"><button type='button' name='Topic1'>JFK Assassination</button></a>
-    <a href="/view/5"><button type='button' name='Topic1'>Hindenburg</button></a>
+    <div id='mytimeline'></div>
     
     <div id='map-canvas' class='map-canvas' >Map should go here!</div>
 
@@ -108,39 +16,57 @@
    <!--Begin script for map -->
     <script>
 
-    var map;
+//Create the variables that will be used within the map configuration options.
+//The latitude and longitude of the center of the map.
+var mainMapCenter = new google.maps.LatLng(32.4621474,-92.8396034);
+//The degree to which the map is zoomed in. This can range from 0 (least zoomed) to 21 and above (most zoomed).
+var mainMapZoom = 3;
+// The max and min zoom levels that are allowed.
+var mainMapZoomMax = 5;
+var mainMapZoomMin = 3;
 
-    function initialize(){
+//These options configure the setup of the map. 
+var mainMapOptions = { 
+          center: mainMapCenter, 
+          zoom: mainMapZoom,
+          //The type of map. In addition to ROADMAP, the other 'premade' map styles are SATELLITE, TERRAIN and HYBRID. 
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          maxZoom: mainMapZoomMax,
+          minZoom: mainMapZoomMin,
+          //Turn off the map controls as we will be adding our own later.
+          panControl: false,
+          mapTypeControl: false,
+};
 
-        var mapOptions = {
-            zoom: 3,
-            center: new google.maps.LatLng(32.4621474,-92.8396034)
-        };
+//Create the variable for the main map itself.
+var mainMap;
 
-        map = new google.maps.Map(
+//THE MAIN FUNCTION THAT IS CALLED WHEN THE WEB PAGE LOADS--------------------------------------------------------------------------------
+    function loadmainMap(){
+
+        mainmap = new google.maps.Map(
             document.getElementById('map-canvas'),
-            mapOptions);
-        
+            mainMapOptions);
 
+    //Calls the function below to load up all the map markers.
+    loadMapMarkers();
 
+    };    
+    
+    
+
+    function loadMapMarkers (){    
         {% for data in topic_data %}
 
         var infowindow{{data.topic_id}} = new google.maps.InfoWindow({
-            content: '<a href="/view/{{data.topic_id}}">{{data.description}}</a>'
+            content: '{{data.description}}<a href="/view/{{data.topic_id}}">Go to Page</a>'
             });
         
-        var icon = {
-            url: '{{data.image}}', // url
-            scaledSize: new google.maps.Size(50, 50), // scaled size
-            origin: new google.maps.Point(0,0), // origin
-            anchor: new google.maps.Point(0, 0) // anchor
-            };
-        
-            // attach markers to each topic locaiton retruned in JSON
+        // attach markers to each topic locaiton retruned in JSON
             var marker{{data.topic_id}} = new google.maps.Marker({
-                    map: map,
+                    map: mainmap,
                     title: '{{ data.topic_title}}',
-                    icon: icon,
+                    label: '{{data.topic_id}}',
                     place: { 
                         location: {lat: {{data.lat}}, lng: {{data.lng}}},
                         query: '{{data.description}}'
@@ -149,7 +75,7 @@
             });        
             
             marker{{data.topic_id}}.addListener('click', function(){
-            infowindow{{data.topic_id}}.open(map, marker{{data.topic_id}});    
+            infowindow{{data.topic_id}}.open(mainmap, marker{{data.topic_id}});    
             });
 
             marker{{data.topic_id}}.addListener('click', function(){
@@ -160,7 +86,7 @@
         {% endfor %} 
     }
 
-    google.maps.event.addDomListener(window, 'load', initialize);
+    google.maps.event.addDomListener(window, 'load', loadmainMap);
 
     </script>
     <!--End script for map-->
@@ -177,16 +103,16 @@
         data.addColumn('string', 'content');
 
         data.addRows([
-          [new Date(1937,07,02), , 'Amelia Earhart Disappears<br>' +
-            '<a href="/view/1"><img src="static/img/AmeliaEarhart.jpg" style="width:48px; height:48px;"></a>'],
-          [new Date(1912,04,15), , 'Titanic Sank<br>' +
-            '<a href="/view/2"><img src="static/img/Titanic.jpg" style="width:48px; height:48px;"></a>'],
-          [new Date(1968,04,04), , 'Martin Luther King Jr. Assasinated<br>' +
-            '<a href="/view/3"><img src="static/img/MLK.jpg" style="width:48px; height:48px;"></a>'],
-          [new Date(1963,11,22), ,'JFK Assasinated<br>' +
-            '<a href="/view/4"><img src="static/img/JFK.jpg" style="width:48px; height:48px;"></a>'],
-          [new Date(1937,05,06), , 'Hindenburg Explosion<br>' +
-            '<a href="/view/5"><img src="static/img/Hindenburg.jpg" style="width:48px; height:48px;"></a>'],
+          [new Date(1937,07,02), , '(1) Amelia Earhart Disappears<br>' +
+            '<img src="static/img/AmeliaEarhart.jpg" style="width:48px; height:48px;"><a href="/view/1">Go to Page</a>'],
+          [new Date(1912,04,15), , '(2) Titanic Sank<br>' +
+            '<img src="static/img/Titanic.jpg" style="width:48px; height:48px;"><a href="/view/2">Go to Page</a>'],
+          [new Date(1968,04,04), , '(3) Martin Luther King Jr. Assasinated<br>' +
+            '<img src="static/img/MLK.jpg" style="width:48px; height:48px;"><a href="/view/3">Go to Page</a>'],
+          [new Date(1963,11,22), ,'(4) JFK Assasinated<br>' +
+            '<img src="static/img/JFK.jpg" style="width:48px; height:48px;"><a href="/view/4">Go to Page</a>'],
+          [new Date(1937,05,06), , '(5) Hindenburg Explosion<br>' +
+            '<img src="static/img/Hindenburg.jpg" style="width:48px; height:48px;"><a href="/view/5">Go to Page</a>'],
           
         ]);
 
@@ -207,11 +133,7 @@
 
         }
 
-        var timeline = new links.Timeline(container);
-
-        //data is a DataTable or a JSON Array, and options is a name-value map in the JSON format
         
-        timeline.draw(data, options);
 
 
     </script>

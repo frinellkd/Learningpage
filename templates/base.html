@@ -11,9 +11,12 @@
     <link rel="stylesheet" href="/static/project.css">
     <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?debug=false&amp;lang=en&amp;modules=ext.uls.nojs%7Cext.visualEditor.viewPageTarget.noscript%7Cext.wikihiero%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector&amp;*">
 
+    
+
 </head>
 
 <body>
+
    <div class='container-fluid'>
 <!--Buttons on page -->   
     <div class="row">
@@ -32,11 +35,99 @@
     <script src="https://code.jquery.com/jquery.js"></script>
 <!--Needed for google map -->    
     <script src="/static/leanModal.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
+     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPvxPGb7HipR4tz7lgE_460luQO8rD6sU&sensor=true"></script>
 <!--needed for timeline -->
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript" src="/static/Timeline/timeline.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/Timeline/timeline.css">
+    
+<!--modal creation for signin/signup -->
+<div class="container">
+<container>
+    <div id="modal" class="popupContainer" style="display: none;">
+        <header class="popupHeader">
+            <span class="header_title">Login</span>
+        <span class="modal_close"><i class="fa fa-times"></i></span>
+     </header>
+ 
+    <section class="popupBody">
+        
+    <!-- Here Goes all the Login and signup Forms -->
+      <div class='user_login'>
+        <form action='/login_submit'>
+            <label>User Name: </label>
+            <input type='text' name='user_name' id='user_name'>
+            <br>
+            <label>Password: </label>
+            <input type='password' name='password' id='password'>
+            <br>
+            <input type='submit'>
+        </form>
+
+      </div>
+
+      <div class='user_register'>
+        <form action='/new_user_submit'>
+            <h3 id="invalid user name/password"></h3>
+        
+                <label for='first_name'>First Name: </label>
+                <input type='text' name='first_name' id='first_name'>
+                <br>
+                <label for='last_name'>Last Name: </label>
+                <input type='text' name='last_name' id='last_name'>
+                <br>
+                <label for='user_name'>Enter Username: </label>
+                <input type='text' name='user_name' id='user_name_new'>
+                 <!--creates a span to dump the ajax result-->
+                <span id='user_result'></span>
+                <br>
+                <label for='password'>Password: </label>
+                <input type='password' name='password' id='password'>
+                <br>
+                <input type='submit'>
+        </form>        
+      </div>
+      <div class="action_btns">
+            <div class="one_half"><a href="#" id="login_form" class="btn">Login</a></div>
+            <div class="one_half last"><a href="#" id="register_form" class="btn">Sign up</a></div>
+      </div>
+    </section> 
+    </div>
+</div>     
+</container>
+    <script>
+
+         $("#modal_trigger").leanModal({top : 200, overlay : 0.6, closeButton: ".modal_close" });
+
+        $(function () {
+        // Calling Login Form
+            $("#login_form").click(function () {
+                $(".user_login").show();
+                $(".user_register").hide();
+                $(".header_title").text('Login');
+                return false;
+            });
+         
+            // Calling Register Form
+            $("#register_form").click(function () {
+                $(".user_register").show();
+                $(".user_login").hide();
+                $(".header_title").text('Register');
+                return false;
+                });
+        })
+
+        $('#user_name_new').change(function(){
+            //user types username on inputfiled
+            var username ={'user_name': $(this).val()};
+            //get the string typed by user
+            $.post('/check_user_name', username, function(data) { 
+                  //make ajax call to check_username.php
+                  $("#user_result").html(data); //dump the data received from PHP page
+                 });
+            });
+
+    </script>    
   
 
   {% block body %} put your content here {% endblock %}

@@ -36,7 +36,7 @@ def index():
                 Event_data.lat, Event_data.lng, Event_data.description,
                 Event_data.event_date, Event_data.image).join(Topic).order_by(Topic.topic_id).all()
 
-    print topic_data
+    
 
     return render_template("homepage.html", topic_data=topic_data)
 
@@ -161,7 +161,12 @@ def view_topic_selected(id):
     # prepares the path by stripping off a retrun (will do this before populating the database in the future)
     topic_wiki = str(topic_selected_wiki.wiki_json).strip()
 
+    data_set = db.session.query(Event_data.topic_id, Event_data.event_title, 
+                Event_data.lat, Event_data.lng, Event_data.description,
+                Event_data.event_date, Event_data.image, Event_data.event_data_id, Topic.topic_title).join(Topic).filter(Event_data.topic_id==id).all()
 
+    
+    
     data = open(topic_wiki).read()
     wiki_data = json.loads(data)
     wiki_data_title = wiki_data['parse']['title']
@@ -177,7 +182,8 @@ def view_topic_selected(id):
         db.session.commit()
     
 
-    return render_template("view.html", youtube_keys=youtube_keys, wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id)
+    return render_template("view.html", youtube_keys=youtube_keys, 
+        wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id, event_data=data_set)
 
 @app.route('/users/<int:id>')
 def userinfo(id):
