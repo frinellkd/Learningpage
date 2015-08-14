@@ -77,25 +77,22 @@ class Topic_visited(db.Model):
                            backref=db.backref("topic_visited"))
 
     
-    # def __repr__(self):
-    #     """Provide helpful representation when printed."""
-
-    #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-    #         self.rating_id, self.movie_id, self.user_id, self.score)
-
+    
 class Topic(db.Model):
 
     __tablename__ = "topics"
 
     topic_id = db.Column(Integer, autoincrement=True, primary_key=True)
     topic_title = db.Column(String(100), nullable=False)
-        
-
-    # def __repr__(self):
-    #     """Provide helpful representation when printed."""
-
-    #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-    #         self.rating_id, self.movie_id, self.user_id, self.score)
+    zoom = db.Column(Integer(3))
+    maxzoom = db.Column(Integer(3))
+    minzoom = db.Column(Integer(3))
+    start_date = db.Column(DateTime)
+    end_date = db.Column(Datetime)
+    center_lat = db.Column(Integer(20))
+    center_lng = db.Column(Integer(3))
+    image= db.Column(String(200))
+    description = db.Column(String(500))
 
 class Topic_wiki(db.Model):
 
@@ -128,11 +125,7 @@ class Topic_video(db.Model):
     topic = db.relationship("Topic",
                            backref=db.backref("topic_video"))
 
-    # def __repr__(self):
-    #     """Provide helpful representation when printed."""
-
-    #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-    #         self.rating_id, self.movie_id, self.user_id, self.score)
+   
 
 class Event_data(db.Model):
 
@@ -143,7 +136,7 @@ class Event_data(db.Model):
     lat = db.Column(Integer)
     lng = db.Column(Integer)
     description = db.Column(String(500))
-    event_date = db.Column(Date)
+    event_date = db.Column(DateTime)
     event_title = db.Column(String(100))
     image= db.Column(String(200))
 
@@ -151,12 +144,7 @@ class Event_data(db.Model):
     topic = db.relationship("Topic",
                            backref=db.backref("event_data"))
 
-    # def __repr__(self):
-    #     """Provide helpful representation when printed."""
-
-    #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-    #         self.rating_id, self.movie_id, self.user_id, self.score)
-
+   
 class Award_earned(db.Model):
 
     __tablename__ = "awards_earned"
@@ -173,11 +161,7 @@ class Award_earned(db.Model):
     visit = db.relationship("Visit",
                            backref=db.backref("award_earned"))
 
-    # def __repr__(self):
-    #     """Provide helpful representation when printed."""
-
-    #     return "<Rating rating_id=%s movie_id=%s user_id=%s score=%s>" % (
-    #         self.rating_id, self.movie_id, self.user_id, self.score)
+    
 
 class Award(db.Model):
 
