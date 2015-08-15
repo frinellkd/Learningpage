@@ -84,13 +84,14 @@ class Topic(db.Model):
 
     topic_id = db.Column(Integer, autoincrement=True, primary_key=True)
     topic_title = db.Column(String(100), nullable=False)
-    zoom = db.Column(Integer(3))
-    maxzoom = db.Column(Integer(3))
-    minzoom = db.Column(Integer(3))
-    start_date = db.Column(DateTime)
-    end_date = db.Column(Datetime)
-    center_lat = db.Column(Integer(20))
-    center_lng = db.Column(Integer(3))
+    zoom = db.Column(Integer)
+    maxzoom = db.Column(Integer)
+    minzoom = db.Column(Integer)
+    start_date = db.Column(Date)
+    end_date = db.Column(Date)
+    main_date = db.Column(Date)
+    center_lat = db.Column(Integer)
+    center_lng = db.Column(Integer)
     image= db.Column(String(200))
     description = db.Column(String(500))
 
@@ -145,37 +146,7 @@ class Event_data(db.Model):
                            backref=db.backref("event_data"))
 
    
-class Award_earned(db.Model):
 
-    __tablename__ = "awards_earned"
-
-    award_earned_id = db.Column(Integer, autoincrement=True, primary_key=True)
-    award_id = db.Column(Integer, ForeignKey('awards.award_id'), nullable=False)
-    visit_id = db.Column(Integer, ForeignKey('visits.visit_id'), nullable=False)
-
-    # Define relationship to Award
-    award = db.relationship("Award",
-                           backref=db.backref("award_earned"))
-    
-    # Define relationship with Visit
-    visit = db.relationship("Visit",
-                           backref=db.backref("award_earned"))
-
-    
-
-class Award(db.Model):
-
-    __tablename__ = "awards"
-
-    award_id = db.Column(Integer, autoincrement=True, primary_key=True)
-    award_name = db.Column(String(50), nullable=False)
-    award_gif_url = db.Column(String(100), nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Award award_id=%s award_name=%s award_gif_url=%s>" % (
-            self.award_id, self.award_name, self.award_gif_url)
 
 class Note(db.Model):
 

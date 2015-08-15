@@ -68,7 +68,7 @@ var mainMap;
                     title: '{{ data.topic_title}}',
                     label: '{{data.topic_id}}',
                     place: { 
-                        location: {lat: {{data.lat}}, lng: {{data.lng}}},
+                        location: {lat: {{data.center_lat}}, lng: {{data.center_lng}}},
                         query: '{{data.description}}'
                     }
                         
@@ -102,20 +102,26 @@ var mainMap;
         data.addColumn('datetime', 'end');
         data.addColumn('string', 'content');
 
+        var d, date_list, year, month, day
+
+
+        {% for data in topic_data %}
+
+        d = '{{data.main_date}}';
+        date_list= d.split('-') ;
+
+
+        year = date_list[0];
+        month = date_list[1];
+        day = date_list[2];
+        
+        
         data.addRows([
-          [new Date(1937,07,02), , '(1) Amelia Earhart Disappears<br>' +
-            '<img src="static/img/AmeliaEarhart.jpg" style="width:48px; height:48px;"><a href="/view/1">Go to Page</a>'],
-          [new Date(1912,04,15), , '(2) Titanic Sank<br>' +
-            '<img src="static/img/Titanic.jpg" style="width:48px; height:48px;"><a href="/view/2">Go to Page</a>'],
-          [new Date(1968,04,04), , '(3) Martin Luther King Jr. Assasinated<br>' +
-            '<img src="static/img/MLK.jpg" style="width:48px; height:48px;"><a href="/view/3">Go to Page</a>'],
-          [new Date(1963,11,22), ,'(4) JFK Assasinated<br>' +
-            '<img src="static/img/JFK.jpg" style="width:48px; height:48px;"><a href="/view/4">Go to Page</a>'],
-          [new Date(1937,05,06), , '(5) Hindenburg Explosion<br>' +
-            '<img src="static/img/Hindenburg.jpg" style="width:48px; height:48px;"><a href="/view/5">Go to Page</a>'],
-          
+          [new Date(year, month, day), , '{{data.topic_title}}<br>'+'<img src="{{data.image}}"  style="width:48px; height:48px;"><a href="/view/{{data.topic_id}}">Go to Page</a>'],
+         
         ]);
 
+        {% endfor %} 
         // specify options
         var options = {
           "width":  "100%",

@@ -6,12 +6,12 @@
 
 //Create the variables that will be used within the map configuration options.
 //The latitude and longitude of the center of the map.
-var topicMapCenter = new google.maps.LatLng({{event_data[0][2]}},{{event_data[0][3]}});
+var topicMapCenter = new google.maps.LatLng({{map_data.center_lat}},{{map_data.center_lng}});
 //The degree to which the map is zoomed in. This can range from 0 (least zoomed) to 21 and above (most zoomed).
-var topicMapZoom = 3;
+var topicMapZoom = {{map_data.zoom}};
 // The max and min zoom levels that are allowed.
-var topicMapZoomMax = 7;
-var topicMapZoomMin = 1;
+var topicMapZoomMax = {{map_data.maxzoom}};
+var topicMapZoomMin = {{map_data.minzoom}};
 
 //These options configure the setup of the map. 
 var topicMapOptions = { 
@@ -21,7 +21,7 @@ var topicMapOptions = {
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           maxZoom:topicMapZoomMax,
           minZoom:topicMapZoomMin,
-          //Turn off the map controls as we will be adding our own later.
+          // Turn off the map controls as we will be adding our own later.
           panControl: false,
           mapTypeControl: false,
 };
@@ -101,18 +101,40 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
         data.addColumn('datetime', 'end');
         data.addColumn('string', 'content');
 
+
+        var dt, d, t, date_list, year, month, day, hour, minute
+
+
+
+
         {% for data in event_data %}
 
-        var year = {{data.event_date.strftime('%Y')}}
-        var month = {{data.event_date.strftime('%m')}}
-        var day = {{data.event_date.strftime('%d')}}
+        dt = '{{data.event_date}}';
+        dt_list = dt.split(" ");
+        d= dt_list[0];
+        t= dt_list[1];
+
+        date_list= d.split('-') ;
+        time_list= t.split(':');
+
+        year = date_list[0];
+        month = date_list[1];
+        day = date_list[2];
+        hour = time_list[0];
+        minute = time_list[1]
         
         
         data.addRows([
-          [new Date(year, month, day), , '{{data.event_title}}<br>'+'<img src="/{{data.image}}"  style="width:48px; height:48px;">'],
-        {% endfor %}  
+          {% if data.image %}
+          [new Date(year, month, day, hour, minute), , '{{data.event_title}}<br>'+'<img src="{{data.image}}"  style="width:48px; height:48px;">'],
+          
+          {% else %}
+          [new Date(year, month, day, hour, minute), , '{{data.event_title}}'],
+
+          {% endif %}
         ]);
 
+        {% endfor %}
         // specify options
         var options = {
           "width":  "100%",
@@ -126,7 +148,6 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
         // Draw our timeline with the created data and options
         timeline.draw(data, options);
         
-
 
         }
 

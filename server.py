@@ -8,7 +8,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Visit, Topic_visited, Topic, Topic_video, Award_earned, Award, Note, Event_data, connect_to_db, db, Topic_wiki
+from model import User, Visit, Topic_visited, Topic, Topic_video, Note, Event_data, connect_to_db, db, Topic_wiki
 
 from sqlalchemy import update
 
@@ -32,9 +32,9 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
     
-    topic_data = db.session.query(Event_data.topic_id, Topic.topic_title, 
-                Event_data.lat, Event_data.lng, Event_data.description,
-                Event_data.event_date, Event_data.image).join(Topic).order_by(Topic.topic_id).all()
+    topic_data = db.session.query(Topic.topic_id, Topic.topic_title, 
+                Topic.center_lat, Topic.center_lng, Topic.description,
+                Topic.main_date, Topic.image).order_by(Topic.topic_id).all()
 
     
 
@@ -163,9 +163,11 @@ def view_topic_selected(id):
 
     data_set = db.session.query(Event_data.topic_id, Event_data.event_title, 
                 Event_data.lat, Event_data.lng, Event_data.description,
-                Event_data.event_date, Event_data.image, Event_data.event_data_id, Topic.topic_title).join(Topic).filter(Event_data.topic_id==id).all()
+                Event_data.event_date, Event_data.image, Event_data.event_data_id,
+                Topic.topic_title).join(Topic).filter(Event_data.topic_id==id).all()
 
-    
+    map_data = db.session.query(Topic.zoom, Topic.maxzoom, Topic.minzoom,
+                Topic.center_lat, Topic.center_lng).filter(Topic.topic_id==id).one()
     
     data = open(topic_wiki).read()
     wiki_data = json.loads(data)
@@ -183,7 +185,8 @@ def view_topic_selected(id):
     
 
     return render_template("view.html", youtube_keys=youtube_keys, 
-        wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id, event_data=data_set)
+        wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id, 
+        event_data=data_set, map_data=map_data)
 
 @app.route('/users/<int:id>')
 def userinfo(id):
