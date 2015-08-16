@@ -178,7 +178,6 @@ a.btn_red  {
 .topic_map {
 
     height: 700px;
-    width: 700px;
     display: block; 
     margin-left: auto;
     margin-right: auto;
@@ -188,6 +187,8 @@ a.btn_red  {
     border-left-width: 2px;
     border-left-color: #ffffff;
     border-left-style: solid;
+    
+
 }
   
 .pop_up_box_text {
