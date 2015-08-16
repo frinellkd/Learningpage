@@ -1,7 +1,7 @@
-1|Amelia Earhart Dissappearance|3|2|6|1936,12,01|1939,01,05|1937,07,03|37.7125689|-122.2197428|/static/img/AmeliaEarhart.jpg|Amelia Earhart Disappears during her attempt to circumnavigate the globe.
+1|Amelia Earhart Dissappearance|1|1|6|1936,12,01|1939,01,05|1937,07,03|37.7125689|-122.2197428|/static/img/AmeliaEarhart.jpg|Amelia Earhart Disappears during her attempt to circumnavigate the globe.
 2|Sinking of the titanic|5|4|9|1910,01,01|1985,09,01|1912,04,15|41.732500|-49.946900|/static/img/Titanic.jpg|Luxery Liner RMS Titanic sank after hitting an iceburg on its maiden voyage. 
 3|Martin Luther King Jr. Assassination|16|10|20|1968,01,01|1998,04,23|1968,04,04|35.1345232|-90.0574813|/static/img/MLK.jpg|Civil rights leader Martin Luther King Jr. Assassinated.
-4|JFK Assassination|16|10|20|1960,11,08|1967,01,03|1963,11,22|32.778203|-96.808497|/static/img/JFK.jpg| President John F. Kennedy Assassinated at Dealey Plaza.
+4|JFK Assassination|10|4|20|1960,11,08|1967,01,03|1963,11,22|32.778203|-96.808497|/static/img/JFK.jpg| President John F. Kennedy Assassinated at Dealey Plaza.
 5|Hindenburg Disaster|10|4|20|1936,03,06|1937,05,31|1937,05,06|40.0297287|-74.3382333|/static/img/Hindenburg.jpg|Explosion of the blimp, Hindenburg.
 6|Abraham Lincoln Assisnation|16|10|20|1834,08,04|1865,12,06|1865,04,14|38.8969408|-77.0256002|/static/img/Lincoln.jpg|President Abraham Lincoln Assinated at Ford's Theatre.
 7|1972 Summer Olympics Bombing|16|10|20|1966,04,26|1976,02,04|1972,09,05|48.1754646|11.551797|/static/img/Olympic.png|Massacre of Olympic athletes and Coaches during the Olympics.

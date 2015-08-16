@@ -164,7 +164,7 @@ def view_topic_selected(id):
     data_set = db.session.query(Event_data.topic_id, Event_data.event_title, 
                 Event_data.lat, Event_data.lng, Event_data.description,
                 Event_data.event_date, Event_data.image, Event_data.event_data_id,
-                Topic.topic_title).join(Topic).filter(Event_data.topic_id==id).all()
+                Topic.topic_title).join(Topic).filter(Event_data.topic_id==id).order_by(Event_data.event_date).all()
 
     map_data = db.session.query(Topic.zoom, Topic.maxzoom, Topic.minzoom,
                 Topic.center_lat, Topic.center_lng).filter(Topic.topic_id==id).one()
