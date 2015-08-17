@@ -168,6 +168,9 @@ def view_topic_selected(id):
 
     map_data = db.session.query(Topic.zoom, Topic.maxzoom, Topic.minzoom,
                 Topic.center_lat, Topic.center_lng).filter(Topic.topic_id==id).one()
+
+    time_data = db.session.query(Topic.start_date,
+                             Topic.end_date).filter(Topic.topic_id==id).one()
     
     data = open(topic_wiki).read()
     wiki_data = json.loads(data)
@@ -186,7 +189,7 @@ def view_topic_selected(id):
 
     return render_template("view.html", youtube_keys=youtube_keys, 
         wiki_data=wiki_data_parsed, wiki_title=wiki_data_title, topic_id=id, 
-        event_data=data_set, map_data=map_data)
+        event_data=data_set, map_data=map_data, time_data=time_data)
 
 @app.route('/users/<int:id>')
 def userinfo(id):
