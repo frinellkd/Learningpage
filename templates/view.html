@@ -43,19 +43,18 @@ function loadtopicMap() {
 
   };
 
-
-
+var marker_dict = {};
 //Function that loads the map markers.
 function loadMapMarkers (){
 
  {% for data in event_data %}
         {% if data.image %}
-        var infowindow{{loop.index}} = new google.maps.InfoWindow({
+        var infowindow{{data.event_data_id}} = new google.maps.InfoWindow({
             content: '({{data.event_title}}.) {{data.description}}<img src="{{data.image}}"  style="width:48px; height:48px;">'
             });
 
         {% else %}
-        var infowindow{{loop.index}} = new google.maps.InfoWindow({
+        var infowindow{{data.event_data_id}} = new google.maps.InfoWindow({
             content: '{{data.event_title}}. {{data.description}}'
             });
         {% endif %}
@@ -63,7 +62,7 @@ function loadMapMarkers (){
         var myLatlng = new google.maps.LatLng({{data.lat}}, {{data.lng}});
 
         // attach markers to each topic locaiton retruned in JSON
-            var marker{{loop.index}} = new MarkerWithLabel({
+            var marker{{data.event_data_id}} = new MarkerWithLabel({
                     map: topicMap,
                     title: '{{data.event_title}}',
                     labelContent: {{loop.index}},
@@ -72,14 +71,14 @@ function loadMapMarkers (){
                     labelInBackground: false,
                     position: myLatlng,
                     
-                        
             });        
             
-            marker{{loop.index}}.addListener('click', function(){
-            infowindow{{loop.index}}.open(topicMap, marker{{loop.index}});    
+            marker{{data.event_data_id}}.addListener('click', function(){
+            infowindow{{data.event_data_id}}.open(topicMap, marker{{data.event_data_id}});    
             });
 
-           
+      marker_dict['{{data.event_data_id}}'] = marker{{data.event_data_id}}
+
 {% endfor %} 
     };
 
@@ -159,7 +158,11 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
 </script>
     <!--End script for timeline-->
 
+
+
+
 <h1>{{wiki_title|safe}}</h1>
+
 
 {% for key in youtube_keys %}
 
@@ -184,6 +187,48 @@ $('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
 
 </script>
 {% endfor %}
+
+ 
+<!--creating a dropdown box-->  
+<form>
+  <div class="checkbox">
+    <label>
+      {%for data in event_data %}
+          
+        <input  type="checkbox"
+              name="event{{loop.index}}"
+              id="{{data.event_data_id}}"
+              value="{{loop.index}}"
+              checked=true
+              onclick= 'validateme(this, marker_dict["{{data.event_data_id}}"])'>({{loop.index}}) {{data.event_title}}<br>
+              
+      
+      {% endfor%}
+    </label>
+  </div>  
+</form>
+
+<script>
+//"""Function for checking whether an event is checked and disabling the map marker if not"""
+function validateme(target, marker) {
+
+
+  if (target.checked){
+    console.log(target.id + " is checked");
+    marker.setMap(topicMap);
+  } else {
+    console.log(target.id + " is unchecked"); 
+    marker.setMap(null);      
+  }
+  
+}
+
+</script>  
+
+ 
+
+
+
 <div id="topic_map{{topic_id}}" class="topic_map"></div>
 <div id='mytimeline'></div>
 <container>
