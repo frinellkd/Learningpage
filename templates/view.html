@@ -92,93 +92,98 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
 
 <!--Begin script for Timeline-->
 <script>
-        google.load("visualization", "1");
-        google.setOnLoadCallback(drawTimeline);
-        function drawTimeline() {
+        
+  google.setOnLoadCallback(drawTimeline);
+  function drawTimeline() {
         // Create and populate a data table.
-        var data = new google.visualization.DataTable();
-
-         
-
-        data.addColumn('datetime', 'start');
-        data.addColumn('datetime', 'end');
-        data.addColumn('string', 'content');
-
-
-        var dt, d, t, date_list, year, month, day, hour, minute, start, end 
-        var styear, stmonth, stday, etyear, etmonth, etday, options 
-
-
-
-        {% for data in event_data %}
-
-        dt = '{{data.event_date}}';
-        dt_list = dt.split(" ");
-        d= dt_list[0];
-        t= dt_list[1];
-
-        date_list= d.split('-') ;
-        time_list= t.split(':');
-
-        year = date_list[0];
-        month = date_list[1];
-        day = date_list[2];
-        hour = time_list[0];
-        minute = time_list[1]
-
         
-                
-        data.addRows([
-          {% if data.image %}
-          [new Date(year, month, day, hour, minute), , '({{loop.index}}) {{data.event_title}}<br>'+'<img src="{{data.image}}"  style="width:48px; height:48px;">'],
+      var data = []
+      var dt, d, t, date_list, year, month, day, hour, minute, start, end 
+      var styear, stmonth, stday, etyear, etmonth, etday
+      var event_dict = {}
+
+    {% for data in event_data %}
+
+      dt = '{{data.event_date}}';
+      dt_list = dt.split(" ");
+      d= dt_list[0];
+      t= dt_list[1];
+
+      date_list= d.split('-') ;
+      time_list= t.split(':');
+
+      year = date_list[0];
+      month = date_list[1];
+      day = date_list[2];
+      hour = time_list[0];
+      minute = time_list[1]
+
+      
+              
+      data.push({
+            {% if data.image %}
+            'start': new Date(year, month, day, hour, minute),
+            'content': '({{loop.index}}) {{data.event_title}}<br>'+'<img src="{{data.image}}"  style="width:48px; height:48px;">',
+            'className': 't_event{{data.event_data_id}}'
+            
+            {% else %}
+            'start': new Date(year, month, day, hour, minute),
+            'content':'({{loop.index}}) {{data.event_title}}',
+            'className': 't_event{{data.event_data_id}}'
+            
+
+            {% endif %}
+            });
+
+      event_dict['{{loop.index}}'] = {{data.event_data_id}};
           
-          {% else %}
-          [new Date(year, month, day, hour, minute), , '({{loop.index}}) {{data.event_title}}'],
+    {% endfor %}
 
-          {% endif %}
-        ]);
+      styear = {{time_data.start_date.year}};
+      etyear= {{time_data.end_date.year}};
+           
+      stmonth = {{time_data.start_date.month}};
+      etmonth = {{time_data.start_date.month}};
+      
+      stday = {{time_data.start_date.day}};
+      etday = {{time_data.start_date.day}};
+      
+      var Start =  new Date(styear, stmonth);
+      var End = new Date(etyear, etmonth);
 
-        {% endfor %}
+      console.log(Start)
+      console.log(End)
 
-        styear = {{time_data.start_date.year}};
-        etyear= {{time_data.end_date.year}};
-             
-        stmonth = {{time_data.start_date.month}};
-        etmonth = {{time_data.start_date.month}};
-        
-        stday = {{time_data.start_date.day}};
-        etday = {{time_data.start_date.day}};
-        
-        var Start =  new Date(styear, stmonth, stday);
-        var End = new Date(etyear, etmonth, etday);
-
-        console.log(Start)
-        console.log(End)
-
-        // specify options
-        options = {
-          "width":  "100%",
-          "height": "auto",// optional after this point
-          "style": "box",
-          "selectable": true,
-          "cluster": true,
-          "box.align": "center",
-          "start": Start,
-          "end": End,
-          "stackEvents": true 
-
-
+    // specify options
+      var options = {
+        "width":  "100%",
+        "height": "auto",// optional after this point
+        "style": "box",
+        "selectable": true,
+        "cluster": true,
+        "box.align": "center",
+        "start":new Date(1451, 09, 01),
+        "end": new Date(1506, 09, 01),
+        "stackEvents": true 
         };
 
-        // Instantiate our timeline object.
-        var timeline = new links.Timeline(document.getElementById('mytimeline'));
+    // Instantiate our timeline object.
+    var timeline = new links.Timeline(document.getElementById('mytimeline'));
 
-        // Draw our timeline with the created data and options
-        timeline.draw(data, options);
-        
+    // Draw our timeline with the created data and options
+    timeline.draw(data, options);
+    
 
-        }
+    }
 
+    function onselect() {
+      var data_id = event_dict[index]
+      console.log(data_id)
+      
+       
+    }
+
+   google.visualization.events.addListener(mytimeline, 'select', onselect) 
        
 </script>
     <!--End script for timeline-->
@@ -225,7 +230,7 @@ $('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
               id="{{data.event_data_id}}"
               value="{{loop.index}}"
               checked=true
-              onclick= 'validateme(this, marker_dict["{{data.event_data_id}}"])'>({{loop.index}}) {{data.event_title}}<br>
+              onclick= 'validateme(this, marker_dict["{{data.event_data_id}}"], ".t_event{{data.event_data_id}}")'>({{loop.index}}) {{data.event_title}}<br>
               
       
       {% endfor%}
@@ -235,18 +240,25 @@ $('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
 
 <script>
 //"""Function for checking whether an event is checked and disabling the map marker if not"""
-function validateme(target, marker) {
+function validateme(target, marker, t_event) {
 
-
+  
   if (target.checked){
     console.log(target.id + " is checked");
     marker.setMap(topicMap);
+    $(t_event).show()
+    // document.getElementsByClassName(t_event).style.display = 'block'
+
   } else {
     console.log(target.id + " is unchecked"); 
-    marker.setMap(null);      
+    marker.setMap(null);
+    $(t_event).hide();
+    // document.getElementsByClassName(t_event).style.display = 'none';      
   }
   
 }
+
+
 
 </script>  
 
