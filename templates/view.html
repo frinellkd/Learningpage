@@ -92,12 +92,14 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
 
 <!--Begin script for Timeline-->
 <script>
+var timeline;
+    
+google.setOnLoadCallback(drawTimeline);
+
+function drawTimeline() {
+  // Creates and populate a data table.
         
-  google.setOnLoadCallback(drawTimeline);
-  function drawTimeline() {
-        // Create and populate a data table.
-        
-      var data = []
+      var events = []
       var dt, d, t, date_list, year, month, day, hour, minute, start, end 
       var styear, stmonth, stday, etyear, etmonth, etday
       var event_dict = {}
@@ -120,7 +122,7 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
 
       
               
-      data.push({
+      events.push({
             {% if data.image %}
             'start': new Date(year, month, day, hour, minute),
             'content': '({{loop.index}}) {{data.event_title}}<br>'+'<img src="{{data.image}}"  style="width:48px; height:48px;">',
@@ -154,36 +156,47 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
       console.log(Start)
       console.log(End)
 
-    // specify options
-      var options = {
-        "width":  "100%",
-        "height": "auto",// optional after this point
-        "style": "box",
-        "selectable": true,
-        "cluster": true,
-        "box.align": "center",
-        "start":new Date(1451, 09, 01),
-        "end": new Date(1506, 09, 01),
-        "stackEvents": true 
-        };
-
     // Instantiate our timeline object.
-    var timeline = new links.Timeline(document.getElementById('mytimeline'));
+    timeline = new links.Timeline(document.getElementById('mytimeline'));
+
+    // specify options
+
+    var start_t = new Date(1451, 09, 01);
+    var end_t = new Date(1451, 09, 17);
+    // var end_t = new Date(1506, 09, 01);
+    console.log(start_t);
+
+    timeline.setOptions({
+      "width":  "100%",
+      "height": "auto",// optional after this point
+      "style": "box",
+      "selectable": true,
+      "cluster": true,
+      "box.align": "center",
+      "start": start_t,
+      "end": end_t,
+      "stackEvents": true
+     });
 
     // Draw our timeline with the created data and options
-    timeline.draw(data, options);
-    
+    timeline.draw(events);
 
-    }
+}
 
-    function onselect() {
-      var data_id = event_dict[index]
-      console.log(data_id)
-      
-       
-    }
+function onselect() {
+    console.log("this events is triggered")
+    // marker = marker_dict[event_dict[index]]
+    // console.log(marker)
+    // topicMapZoom = 17
+    // var latLng = marker.getPosition(); // returns LatLng object
+    // map.setCenter(latLng);
+   
+}
 
-   google.visualization.events.addListener(mytimeline, 'select', onselect) 
+// google.visualization.events.addListener(timeline, 'select', onselect);
+// links.events.addListener(timeline, 'select', onselect); 
+timeline.addListener(events, 'select', onselect);
+
        
 </script>
     <!--End script for timeline-->
