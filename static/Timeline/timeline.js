@@ -774,6 +774,13 @@ links.Timeline.prototype.setVisibleChartRange = function(start, end, redraw) {
 links.Timeline.prototype.setVisibleChartRangeAuto = function() {
     var range = this.getDataRange(true);
     this.setVisibleChartRange(range.min, range.max);
+    if (this.options && (this.options.start || this.options.end)) {
+        this.setVisibleChartRange(this.options.start, this.options.end);
+        }   
+    else {
+        var range = this.getDataRange(true);
+        this.setVisibleChartRange(range.min, range.max);
+    }
 };
 
 /**

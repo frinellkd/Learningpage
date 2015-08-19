@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 {% block body %}
 
+<script>
+// For handling wikipedia links
+$(document).ready(function(){
+  $("#wiki a[href^='/wiki']")
+   .each(function()
+   { 
+      this.href = this.href.replace(/^.*\/wiki\//, 
+         "http://wikipedia.org/wiki/")
+   });
+
+});
+</script>
 
 <script>
 
@@ -93,7 +105,7 @@ google.maps.event.addDomListener(window, 'load', loadtopicMap);
 <!--Begin script for Timeline-->
 <script>
 var timeline;
-    
+var event_dict = {}    
 google.setOnLoadCallback(drawTimeline);
 
 function drawTimeline() {
@@ -102,7 +114,7 @@ function drawTimeline() {
       var events = []
       var dt, d, t, date_list, year, month, day, hour, minute, start, end 
       var styear, stmonth, stday, etyear, etmonth, etday
-      var event_dict = {}
+      
 
     {% for data in event_data %}
 
@@ -137,7 +149,7 @@ function drawTimeline() {
             {% endif %}
             });
 
-      event_dict['{{loop.index}}'] = {{data.event_data_id}};
+      event_dict['{{loop.index0}}'] = {{data.event_data_id}};
           
     {% endfor %}
 
@@ -150,22 +162,18 @@ function drawTimeline() {
       stday = {{time_data.start_date.day}};
       etday = {{time_data.start_date.day}};
       
-      var Start =  new Date(styear, stmonth);
-      var End = new Date(etyear, etmonth);
+      var Start_t =  new Date(styear, stmonth);
+      var End_t = new Date(etyear, etmonth);
 
-      console.log(Start)
-      console.log(End)
+      console.log(Start_t)
+      console.log(End_t)
 
     // Instantiate our timeline object.
     timeline = new links.Timeline(document.getElementById('mytimeline'));
 
     // specify options
 
-    var start_t = new Date(1451, 09, 01);
-    var end_t = new Date(1451, 09, 17);
-    // var end_t = new Date(1506, 09, 01);
-    console.log(start_t);
-
+   
     timeline.setOptions({
       "width":  "100%",
       "height": "auto",// optional after this point
@@ -173,29 +181,33 @@ function drawTimeline() {
       "selectable": true,
       "cluster": true,
       "box.align": "center",
-      "start": start_t,
-      "end": end_t,
+      "start": new Date(styear, stmonth, stday),
+      "end": new Date(etyear, etmonth, etday),
       "stackEvents": true
      });
 
     // Draw our timeline with the created data and options
     timeline.draw(events);
 
+    //Adds listener to the events created
+    links.events.addListener(timeline, 'select', onselect);
+
 }
 
-function onselect() {
-    console.log("this events is triggered")
-    // marker = marker_dict[event_dict[index]]
-    // console.log(marker)
-    // topicMapZoom = 17
-    // var latLng = marker.getPosition(); // returns LatLng object
-    // map.setCenter(latLng);
-   
+function onselect(){
+  var sel = timeline.getSelection();
+  var event_index = (sel[0].row);
+  console.log(event_index) 
+  console.log(Object.prototype.toString.call(event_index));
+  console.log(event_dict)
+  var data_id = event_dict[event_index];
+  console.log(data_id)
+  var map_marker = marker_dict[data_id];
+  console.log(map_marker)
+  topicMap.setZoom(17);
+  topicMap.panTo(map_marker.position); 
 }
 
-// google.visualization.events.addListener(timeline, 'select', onselect);
-// links.events.addListener(timeline, 'select', onselect); 
-timeline.addListener(events, 'select', onselect);
 
        
 </script>
