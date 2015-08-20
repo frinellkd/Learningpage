@@ -14,8 +14,10 @@ $(document).ready(function(){
 });
 </script>
 
+<!--Begin script for map -->
 <script>
 
+// MAP VARIABLES
 //Create the variables that will be used within the map configuration options.
 //The latitude and longitude of the center of the map.
 var topicMapCenter = new google.maps.LatLng({{map_data.center_lat}},{{map_data.center_lng}});
@@ -24,7 +26,11 @@ var topicMapZoom = {{map_data.zoom}};
 // The max and min zoom levels that are allowed.
 var topicMapZoomMax = {{map_data.maxzoom}};
 var topicMapZoomMin = {{map_data.minzoom}};
-
+// Creates dictionaries to store marker ids and infobox ids.
+var marker_dict = {};
+var info_dict = {};
+//Create the variable for the topic map itself.
+var topicMap;
 //These options configure the setup of the map. 
 var topicMapOptions = { 
           center: topicMapCenter, 
@@ -36,17 +42,13 @@ var topicMapOptions = {
           
 };
 
-//Create the variable for the topic map itself.
-var topicMap;
-
-
-
-
-
-//THE MAIN FUNCTION THAT IS CALLED WHEN THE WEB PAGE LOADS--------------------------------------------------------------------------------
+// MAP FUNCTIONS
+//The main function that is called when the web page loads
+//------------------------------------------------------------------------
 function loadtopicMap() {
     
-  //The empty map variable ('topicmap') was created above. The line below creates the map, assigning it to this variable. The line below also loads the map into the div with the id 'topic_map{{topic_id}}' (see code within the 'body' tags below), and applies the 'topicMapOptions' (above) to configure this map. 
+  //Creates the map, assigning it to this variable, also loads the map into the div with the id 'topic_map{{topic_id}}', and applies the 'topicMapOptions' (above) to configure this map. 
+  
   topicMap = new google.maps.Map(document.getElementById("topic_map{{topic_id}}"), topicMapOptions); 
 
 
@@ -55,11 +57,11 @@ function loadtopicMap() {
 
   };
 
-var marker_dict = {};
+
 //Function that loads the map markers.
 function loadMapMarkers (){
 
- {% for data in event_data %}
+  {% for data in event_data %}
         {% if data.image %}
         var infowindow{{data.event_data_id}} = new google.maps.InfoWindow({
             content: '({{data.event_title}}.) {{data.description}}<img src="{{data.image}}"  style="width:48px; height:48px;">'
@@ -82,6 +84,7 @@ function loadMapMarkers (){
                     labelClass: "labels",
                     labelInBackground: false,
                     position: myLatlng,
+                    query: '{{data.description}}'
                     
                     
             });        
@@ -91,21 +94,23 @@ function loadMapMarkers (){
             });
 
       marker_dict['{{data.event_data_id}}'] = marker{{data.event_data_id}}
+      info_dict['{{data.event_data_id}}'] = infowindow{{data.event_data_id}}
 
-{% endfor %} 
-    };
+  {% endfor %} 
 
-//When the page loads, the line below calls the function below called 'loadTopicMap' to load up the map.
-
+};
 
 google.maps.event.addDomListener(window, 'load', loadtopicMap);
 
 </script>
+<!--End script for map-->
 
 <!--Begin script for Timeline-->
 <script>
 var timeline;
-var event_dict = {}    
+var event_dict = {} 
+var event_dict2 = {}
+
 google.setOnLoadCallback(drawTimeline);
 
 function drawTimeline() {
@@ -150,6 +155,7 @@ function drawTimeline() {
             });
 
       event_dict['{{loop.index0}}'] = {{data.event_data_id}};
+      event_dict2['{{data.event_data_id}}'] = '.t_event{{data.event_data_id}}'
           
     {% endfor %}
 
@@ -157,33 +163,28 @@ function drawTimeline() {
       etyear= {{time_data.end_date.year}};
            
       stmonth = {{time_data.start_date.month}};
-      etmonth = {{time_data.start_date.month}};
+      etmonth = {{time_data.end_date.month}};
       
       stday = {{time_data.start_date.day}};
-      etday = {{time_data.start_date.day}};
+      etday = {{time_data.end_date.day}};
       
       var Start_t =  new Date(styear, stmonth);
       var End_t = new Date(etyear, etmonth);
 
-      console.log(Start_t)
-      console.log(End_t)
-
+      
     // Instantiate our timeline object.
     timeline = new links.Timeline(document.getElementById('mytimeline'));
 
     // specify options
-
-   
     timeline.setOptions({
       "width":  "100%",
       "height": "auto",// optional after this point
       "style": "box",
       "selectable": true,
       "cluster": true,
-      "box.align": "center",
       "start": new Date(styear, stmonth, stday),
-      "end": new Date(etyear, etmonth, etday),
-      "stackEvents": true
+      "end": new Date(etyear, etmonth, etday)
+      
      });
 
     // Draw our timeline with the created data and options
@@ -197,21 +198,16 @@ function drawTimeline() {
 function onselect(){
   var sel = timeline.getSelection();
   var event_index = (sel[0].row);
-  console.log(event_index) 
-  console.log(Object.prototype.toString.call(event_index));
-  console.log(event_dict)
   var data_id = event_dict[event_index];
-  console.log(data_id)
   var map_marker = marker_dict[data_id];
-  console.log(map_marker)
   topicMap.setZoom(17);
-  topicMap.panTo(map_marker.position); 
+  topicMap.panTo(map_marker.position);
+  info_dict[data_id].open(topicMap, map_marker)
+   
 }
 
-
-       
 </script>
-    <!--End script for timeline-->
+<!--End script for timeline-->
 
 
 
@@ -248,11 +244,17 @@ $('#thumbnail_{{key.youtube_video_key}}').on("click", function(evt) {
 <form>
   <div class="checkbox">
     <label>
+      <input type='button' id='selectall' value= 'SELECT ALL'>
+      <input type='button' id='unselectall' value= "UNSELECT ALL"> 
+      <input type='button' id='resetmap' value="RESET MAP"> <br>
+
+
       {%for data in event_data %}
           
         <input  type="checkbox"
               name="event{{loop.index}}"
               id="{{data.event_data_id}}"
+              class = "checkbox1"
               value="{{loop.index}}"
               checked=true
               onclick= 'validateme(this, marker_dict["{{data.event_data_id}}"], ".t_event{{data.event_data_id}}")'>({{loop.index}}) {{data.event_title}}<br>
@@ -269,13 +271,11 @@ function validateme(target, marker, t_event) {
 
   
   if (target.checked){
-    console.log(target.id + " is checked");
     marker.setMap(topicMap);
     $(t_event).show()
     // document.getElementsByClassName(t_event).style.display = 'block'
 
-  } else {
-    console.log(target.id + " is unchecked"); 
+  } else { 
     marker.setMap(null);
     $(t_event).hide();
     // document.getElementsByClassName(t_event).style.display = 'none';      
@@ -284,6 +284,31 @@ function validateme(target, marker, t_event) {
 }
 
 
+$('#selectall').on('click', function(event) {  //on click 
+    $('.checkbox1').each(function() { //loop through each checkbox
+          this.checked = true;
+          validateme(this, marker_dict[this.id], event_dict2[this.id]);  //select all checkboxes with class "checkbox1"               
+    });
+});    
+  
+$('#unselectall').on('click', function(event) {
+    $('.checkbox1').each(function() { //loop through each checkbox
+          this.checked = false;
+          validateme(this, marker_dict[this.id], event_dict2[this.id]); //deselect all checkboxes with class "checkbox1"
+          $('.timeline-event-cluster').hide();                       
+    });         
+});
+
+$('#resetmap').on('click', function(event) {
+    $('.checkbox1').each(function() { //loop through each checkbox
+          this.checked = true;
+          drawTimeline();
+          loadtopicMap()
+
+          
+           //deselect all checkboxes with class "checkbox1"                       
+    });         
+});
 
 </script>  
 
